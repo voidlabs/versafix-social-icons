@@ -5,10 +5,13 @@ In order to improve maintainability icon styles are automatically generated from
 ## SRC
 - ```icons-def/``` folder contains a 512x512 B&W icon for each social we support
 - ```index.js``` contains the 7 transformations we want to apply.
+![Example source icon](https://github.com/voidlabs/versafix-social-icons/blob/master/icons-def/inst-black-512.png?raw=true)
 
 ## GENERATED
 - ```icons/``` contains the generated icons that will be used in versafix-1 template (96x96px)
 - ```icons-overview/``` contains an overview montage of the generated icons.
+
+![48px overview](https://github.com/voidlabs/versafix-social-icons/blob/master/icons-overview/all-48.png?raw=true)
 
 ### Build/Run
 
