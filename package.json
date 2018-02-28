@@ -1,0 +1,14 @@
+{
+  "name": "versafix-social-icons",
+  "version": "1.0.0",
+  "description": "Social icon pack for Mosaico's versafix-1 master template",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js"
+  },
+  "author": "Stefano Bagnara",
+  "license": "MIT",
+  "devDependencies": {
+    "pngquant-bin": "^3.1.1"
+  }
+}
