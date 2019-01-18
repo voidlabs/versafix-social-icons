@@ -11,7 +11,7 @@ In order to improve maintainability icon styles are automatically generated from
 - ```icons/``` contains the generated icons that will be used in versafix-1 template (96x96px)
 - ```icons-overview/``` contains an overview montage of the generated icons.
 
-> ![48px overview](https://github.com/voidlabs/versafix-social-icons/blob/master/icons-overview/all-48.png?raw=true)
+> ![48px overview](/icons-overview/all-48.png?raw=true)
 >
 > There is also two white logos on transparent background that you won't see in the github preview because of white background page.
 
