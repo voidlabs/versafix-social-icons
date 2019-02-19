@@ -22,5 +22,5 @@ You need NodeJS v6.0 or higher + ImageMagick
 ```
   npm install
   npm run build
-  npm run build -- #900000
+  npm run build -- "#900000"
 ```
