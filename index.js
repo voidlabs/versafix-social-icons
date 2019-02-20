@@ -45,9 +45,9 @@ for(var icon in iconsDef) if (iconsDef.hasOwnProperty(icon)) {
 }
 
 // Review available icons
-montage(outputPath+'* -background transparent -tile 7x10','./icons-overview/all.png');
-montage(outputPath+'* -background transparent -geometry 48x48+6+6 -tile 7x10','./icons-overview/all-48.png');
-montage(outputPath+'* -background transparent -geometry 32x32+6+6 -tile 7x10','./icons-overview/all-32.png');
+montage(outputPath+'*.png -background transparent -tile 7x10','./icons-overview/all.png');
+montage(outputPath+'*.png -background transparent -geometry 48x48+6+6 -tile 7x10','./icons-overview/all-48.png');
+montage(outputPath+'*.png -background transparent -geometry 32x32+6+6 -tile 7x10','./icons-overview/all-32.png');
 
 console.log("DONE!");
 
