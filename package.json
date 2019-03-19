@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "Social icon pack for Mosaico's versafix-1 master template",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:voidlabs/versafix-social-icons.git"
+  },
   "scripts": {
-    "build": "node index.js"
+    "build": "node index.js",
+    "clean": "node ./node_modules/rimraf/bin.js -- 'icons-overview/*.png' 'icons/*.png'"
   },
   "author": "Stefano Bagnara",
   "license": "MIT",
   "devDependencies": {
-    "pngquant-bin": "^5.0.2"
+    "pngquant-bin": "^5.0.2",
+    "rimraf": "^2.6.3"
   }
 }

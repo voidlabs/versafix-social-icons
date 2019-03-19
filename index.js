@@ -14,7 +14,17 @@ var iconsDef = {
   'vi':   '#45bbff',
   'inst': '#bc2a8d',
   'you':  '#cd201f',
+  'wa':   '#25d366',
 };
+var coloursIconsSourceOverride = {
+};
+var negativeCirclesIconsSourceOverride = {
+  'wa': 'wa-nc',
+};
+var roundedColorsIconsSourceOverride = {
+  'wa': 'wa-rd',
+};
+
 var colorGray  = '#828282';
 var colorBlack = '#000000';
 
@@ -25,47 +35,122 @@ var outputPath = './icons/';
 
 var DEBUG = false;
 
-var color, inputIcon;
+function getinputPathOverride(icon, override) {
+  if (typeof override === 'object' && typeof override[icon] === 'string')
+    return override[icon];
+  return false;
+}
+
+function inputName(icon) {
+  return './icons-def/'+icon+'-black-512.png';
+}
+
+function outputName(icon, type) {
+  return outputPath+icon+'-'+type+'-'+finalSize+'.png';
+}
+
+function defaultConvert(iconPath, color, squareSize, outputPath) {
+  return convert(
+    iconPath,
+    '-fuzz 90%',
+    '-fill "'+color+'"',
+    '-opaque black',
+    '-resize '+squareSize,
+    outputPath
+  );
+}
+
+var color, inputPath;
 for(var icon in iconsDef) if (iconsDef.hasOwnProperty(icon)) {
   color = iconsDef[icon];
-  inputIcon = './icons-def/'+icon+'-black-512.png';
 
-  // white
-  convert(inputIcon,'-fuzz 90%','-fill white', '-opaque black','-resize '+squareSize,outputPath+icon+'-white-'+finalSize+'.png');
-  // color
-  convert(inputIcon,'-fuzz 90%','-fill "'+color+'"','-opaque black','-resize '+squareSize,outputPath+icon+'-coloured-'+finalSize+'.png');
-  // black
-  convert(inputIcon,'-fuzz 90%','-fill black', '-opaque black','-resize '+squareSize,outputPath+icon+'-black-'+finalSize+'.png');
-  // color circle white icon
-  convert('-size 600x600','xc:transparent','-fill "'+color+'"','-draw "circle 300,300 0,300"','"\(" '+inputIcon+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite','-resize '+squareSize,outputPath+icon+'-colors-'+finalSize+'.png');
-  // grey circle black icon
-  convert('-size 600x600','xc:transparent','-fill gray',  '-draw "circle 300,300 0,300"','"\(" '+inputIcon+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite','-resize '+squareSize,outputPath+icon+'-bw-'+finalSize+'.png');
-  // color outline color icon
-  convert('-size 680x680','xc:transparent','-fill none', '-stroke black', '-strokewidth 40', '-draw "circle 340,340 20,340"','"\(" '+inputIcon+' -geometry +84+84 "\)" -composite','-fuzz 90%','-fill "'+color+'"','-opaque black','-resize '+squareSize,outputPath+icon+'-rdcol-'+finalSize+'.png');
-  // black outline black icon
-  convert('-size 680x680','xc:transparent','-fill none', '-stroke black', '-strokewidth 40', '-draw "circle 340,340 20,340"','"\(" '+inputIcon+' -geometry +84+84 "\)" -composite','-resize '+squareSize,outputPath+icon+'-rdbl-'+finalSize+'.png');
-  // white outline white icon
-  convert('-size 680x680','xc:transparent','-fill none', '-stroke white', '-strokewidth 40', '-draw "circle 340,340 20,340"','"\(" '+inputIcon+' -geometry +84+84 "\)" -composite','-fuzz 90%','-fill white','-opaque black','-resize '+squareSize,outputPath+icon+'-rdw-'+finalSize+'.png');
-
-  if (brandColor) {
+  var colours = {
+    // white
+    white: 'white',
+    // color
+    coloured: color,
+    // black
+    black: 'black',
     // brand color
-    convert(inputIcon,'-fuzz 90%','-fill "'+brandColor+'"','-opaque black','-resize '+squareSize,outputPath+icon+'-colouredbrand-'+finalSize+'.png');
-    // brand color circle white icon
-    convert('-size 600x600','xc:transparent','-fill "'+brandColor+'"','-draw "circle 300,300 0,300"','"\(" '+inputIcon+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite','-resize '+squareSize,outputPath+icon+'-colorsbrand-'+finalSize+'.png');
-    // brand color outline brand color icon
-    convert('-size 680x680','xc:transparent','-fill none', '-stroke black', '-strokewidth 40', '-draw "circle 340,340 20,340"','"\(" '+inputIcon+' -geometry +84+84 "\)" -composite','-fuzz 90%','-fill "'+brandColor+'"','-opaque black','-resize '+squareSize,outputPath+icon+'-rdbrandcol-'+finalSize+'.png');
+    colouredbrand: brandColor,
+  };
+
+  for (var p in colours) if (colours.hasOwnProperty(p)) if (typeof colours[p] !== 'undefined') {
+    defaultConvert(inputName(icon), colours[p], squareSize, outputName(icon, p));
   }
+
+
+  var negativeCircles = {
+    // color circle white icon
+    colors: color,
+    // grey circle black icon
+    bw: 'gray',
+    // brand color circle white icon
+    colorsbrand: brandColor,
+  };
+
+  for (var p in negativeCircles) if (negativeCircles.hasOwnProperty(p)) if (typeof negativeCircles[p] !== 'undefined') {
+    var iconOverride = getinputPathOverride(icon, negativeCirclesIconsSourceOverride);
+    if (iconOverride) {
+      defaultConvert(inputName(iconOverride), negativeCircles[p], squareSize, outputName(icon, p));
+    } else {
+      convert('-size 600x600',
+        'xc:transparent',
+        '-fill "'+negativeCircles[p]+'"',
+        '-draw "circle 300,300 0,300"',
+        '"\(" '+inputName(icon)+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite',
+        '-resize '+squareSize,
+        outputName(icon, p)
+      );
+    }
+  }
+
+  var roundedColors = {
+    // color outline color icon
+    rdcol: color,
+    // black outline black icon
+    rdbl: 'black',
+    // white outline white icon
+    rdw: 'white',
+    // brand color outline brand color icon
+    rdbrandcol: brandColor,
+
+  };
+
+  for (var p in roundedColors) if (roundedColors.hasOwnProperty(p)) if (typeof roundedColors[p] !== 'undefined') {
+    var iconOverride = getinputPathOverride(icon, roundedColorsIconsSourceOverride);
+    if (iconOverride) {
+      defaultConvert(inputName(iconOverride), roundedColors[p], squareSize, outputName(icon, p));
+    } else {
+      convert('-size 680x680',
+        'xc:transparent',
+        '-fill none',
+        '-stroke black',
+        '-strokewidth 40',
+        '-draw "circle 340,340 20,340"',
+        '"\(" '+inputName(icon)+' -geometry +84+84 "\)" -composite',
+        '-fuzz 90%',
+        '-fill "'+roundedColors[p]+'"',
+        '-opaque black',
+        '-resize '+squareSize,
+        outputName(icon, p)
+      );
+      // convert('-size 680x680','xc:transparent','-fill none', '-stroke black', '-strokewidth 40', '-draw "circle 340,340 20,340"','"\(" '+inputPath+' -geometry +84+84 "\)" -composite','-resize '+squareSize,outputPath+icon+'-rdbl-'+finalSize+'.png');
+    }
+  }
+
 }
 
 var overviewColumns = 8;
 if (brandColor) {
   overviewColumns = 11;
 }
+var overviewRows = 11;
 
 // Review available icons
-montage(outputPath+'*.png -background transparent -tile '+overviewColumns+'x10','./icons-overview/all.png');
-montage(outputPath+'*.png -background transparent -geometry 48x48+6+6 -tile '+overviewColumns+'x10','./icons-overview/all-48.png');
-montage(outputPath+'*.png -background transparent -geometry 32x32+6+6 -tile '+overviewColumns+'x10','./icons-overview/all-32.png');
+montage(outputPath+'*.png -background transparent -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all.png');
+montage(outputPath+'*.png -background transparent -geometry 48x48+6+6 -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all-48.png');
+montage(outputPath+'*.png -background transparent -geometry 32x32+6+6 -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all-32.png');
 
 console.log("DONE!");
 
