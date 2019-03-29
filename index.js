@@ -15,6 +15,7 @@ var iconsDef = {
   'inst': '#bc2a8d',
   'you':  '#cd201f',
   'wa':   '#25d366',
+  'tg':  '#2DA5E1',
 };
 var coloursIconsSourceOverride = {
 };
@@ -145,7 +146,7 @@ var overviewColumns = 8;
 if (brandColor) {
   overviewColumns = 11;
 }
-var overviewRows = 11;
+var overviewRows = 12;
 
 // Review available icons
 montage(outputPath+'*.png -background transparent -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all.png');
