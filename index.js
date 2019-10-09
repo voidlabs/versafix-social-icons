@@ -6,7 +6,6 @@ var pngquant = require('pngquant-bin');
 var iconsDef = {
   'fb':   '#3b5998',
   'tw':   '#4099FF',
-  'gg':   '#d34836',
   'web':  '#606060',
   'in':   '#007bb6',
   'pi':   '#C92228',
@@ -146,7 +145,7 @@ var overviewColumns = 8;
 if (brandColor) {
   overviewColumns = 11;
 }
-var overviewRows = 12;
+var overviewRows = 11;
 
 // Review available icons
 montage(outputPath+'*.png -background transparent -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all.png');
