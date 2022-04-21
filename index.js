@@ -1,7 +1,7 @@
 var brandColor = process.argv[2];
 
-var cp = require('child_process');
-var pngquant = require('pngquant-bin');
+import cp from 'child_process';
+import pngquant from 'pngquant-bin';
 
 var iconsDef = {
   'fb':   '#3b5998',
@@ -15,7 +15,7 @@ var iconsDef = {
   'inst': '#bc2a8d',
   'you':  '#cd201f',
   'wa':   '#25d366',
-  'tg':  '#2DA5E1',
+  'tg':   '#2da5e1',
 };
 var coloursIconsSourceOverride = {
 };
