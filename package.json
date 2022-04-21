@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "node index.js",
-    "clean": "node ./node_modules/rimraf/bin.js -- 'icons-overview/*.png' 'icons/*.png'"
+    "clean": "node ./node_modules/rimraf/bin.js -- icons-overview/*.png icons/*.png"
   },
   "author": "Stefano Bagnara",
   "license": "MIT",
