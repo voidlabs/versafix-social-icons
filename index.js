@@ -3,6 +3,19 @@ var brandColor = process.argv[2];
 import cp from 'child_process';
 import pngquant from 'pngquant-bin';
 
+var iconStyles = {
+  white: { color: 'white' },
+  coloured: { },
+  black: { color: 'black' },
+
+  colors: { transform: 'negativeCircles' },
+  bw: { transform: 'negativeCircles', color: 'gray' },
+
+  rdcol: { transform: 'roundedColors' },
+  rdbl: { transform: 'roundedColors', color: 'black' },
+  rdw: { transform: 'roundedColors', color: 'white' },
+};
+
 var iconsDef = {
   'fb':   '#3b5998',
   'tw':   '#4099FF',
@@ -17,141 +30,112 @@ var iconsDef = {
   'wa':   '#25d366',
   'tg':   '#2da5e1',
 };
-var coloursIconsSourceOverride = {
-};
-var negativeCirclesIconsSourceOverride = {
-  'wa': 'wa-nc',
-};
-var roundedColorsIconsSourceOverride = {
-  'wa': 'wa-rd',
-};
 
-var colorGray  = '#828282';
-var colorBlack = '#000000';
+var iconsSelection = ['fb', 'tw', 'in', 'inst', 'wa', 'tg'];
+
+var iconsSourceOverride = {
+  negativeCircles: {
+    'wa': 'wa-nc',
+  },
+  roundedColors: {
+    'wa': 'wa-rd',
+  }
+}
 
 var finalSize = 96;
-
 var squareSize = finalSize+'x'+finalSize;
 var outputPath = './icons/';
 
 var DEBUG = false;
 
-function getinputPathOverride(icon, override) {
-  if (typeof override === 'object' && typeof override[icon] === 'string')
-    return override[icon];
-  return false;
-}
-
-function inputName(icon) {
-  return './icons-def/'+icon+'-black-512.png';
-}
-
-function outputName(icon, type) {
-  return outputPath+icon+'-'+type+'-'+finalSize+'.png';
-}
-
-function defaultConvert(iconPath, color, squareSize, outputPath) {
-  return convert(
-    iconPath,
-    '-fuzz 90%',
-    '-fill "'+color+'"',
-    '-opaque black',
-    '-resize '+squareSize,
-    outputPath
-  );
+if (typeof brandColor !== 'undefined') {
+  iconStyles.colouredbrand = { color: brandColor };
+  iconStyles.colorsBrand = { transform: 'negativeCircles', color: brandColor };
+  iconStyles.rdbrandcol = { transform: 'roundedColors', color: brandColor };
 }
 
 var color, inputPath;
 for(var icon in iconsDef) if (iconsDef.hasOwnProperty(icon)) {
   color = iconsDef[icon];
 
-  var colours = {
-    // white
-    white: 'white',
-    // color
-    coloured: color,
-    // black
-    black: 'black',
-    // brand color
-    colouredbrand: brandColor,
-  };
+  var iconDef, iconColor, transform, iconStyle, inputName, outputName;
+  for (var is in iconStyles) if (iconStyles.hasOwnProperty(is)) {
+    iconStyle = iconStyles[is];
+    iconDef = icon;
+    iconColor = iconStyle.hasOwnProperty('color') ? iconStyle.color : color;
+    transform = iconStyle.hasOwnProperty('transform') ? iconStyle.transform : 'color';
+    if (iconStyle.hasOwnProperty('transform') && iconsSourceOverride.hasOwnProperty(iconStyle.transform)
+      && iconsSourceOverride[iconStyle.transform].hasOwnProperty(icon)) {
+      iconDef = iconsSourceOverride[iconStyle.transform][icon];
+      transform = 'color';
+    }
+    inputName = './icons-def/'+iconDef+'-black-512.png';
+    outputName = outputPath+icon+'-'+is+'-'+finalSize+'.png';
 
-  for (var p in colours) if (colours.hasOwnProperty(p)) if (typeof colours[p] !== 'undefined') {
-    defaultConvert(inputName(icon), colours[p], squareSize, outputName(icon, p));
-  }
+    switch(transform) {
+      case 'color':
+        convert(
+          inputName,
+          '-fuzz 90%',
+          '-fill "'+iconColor+'"',
+          '-opaque black',
+          '-resize '+squareSize,
+          outputName
+        );
+        break;
 
+      case 'negativeCircles':
+        convert('-size 600x600',
+          'xc:transparent',
+          '-fill "'+iconColor+'"',
+          '-draw "circle 300,300 0,300"',
+          '"\(" '+inputName+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite',
+          '-resize '+squareSize,
+          outputName
+        );
+        break;
 
-  var negativeCircles = {
-    // color circle white icon
-    colors: color,
-    // grey circle black icon
-    bw: 'gray',
-    // brand color circle white icon
-    colorsbrand: brandColor,
-  };
+      case 'roundedColors':
+        convert('-size 680x680',
+          'xc:transparent',
+          '-fill none',
+          '-stroke black',
+          '-strokewidth 40',
+          '-draw "circle 340,340 20,340"',
+          '"\(" '+inputName+' -geometry +84+84 "\)" -composite',
+          '-fuzz 90%',
+          '-fill "'+iconColor+'"',
+          '-opaque black',
+          '-resize '+squareSize,
+          outputName
+        );
+        break;
 
-  for (var p in negativeCircles) if (negativeCircles.hasOwnProperty(p)) if (typeof negativeCircles[p] !== 'undefined') {
-    var iconOverride = getinputPathOverride(icon, negativeCirclesIconsSourceOverride);
-    if (iconOverride) {
-      defaultConvert(inputName(iconOverride), negativeCircles[p], squareSize, outputName(icon, p));
-    } else {
-      convert('-size 600x600',
-        'xc:transparent',
-        '-fill "'+negativeCircles[p]+'"',
-        '-draw "circle 300,300 0,300"',
-        '"\(" '+inputName(icon)+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite',
-        '-resize '+squareSize,
-        outputName(icon, p)
-      );
+      default: 
+        console.log("ERROR: unknown style ", is);
     }
   }
-
-  var roundedColors = {
-    // color outline color icon
-    rdcol: color,
-    // black outline black icon
-    rdbl: 'black',
-    // white outline white icon
-    rdw: 'white',
-    // brand color outline brand color icon
-    rdbrandcol: brandColor,
-
-  };
-
-  for (var p in roundedColors) if (roundedColors.hasOwnProperty(p)) if (typeof roundedColors[p] !== 'undefined') {
-    var iconOverride = getinputPathOverride(icon, roundedColorsIconsSourceOverride);
-    if (iconOverride) {
-      defaultConvert(inputName(iconOverride), roundedColors[p], squareSize, outputName(icon, p));
-    } else {
-      convert('-size 680x680',
-        'xc:transparent',
-        '-fill none',
-        '-stroke black',
-        '-strokewidth 40',
-        '-draw "circle 340,340 20,340"',
-        '"\(" '+inputName(icon)+' -geometry +84+84 "\)" -composite',
-        '-fuzz 90%',
-        '-fill "'+roundedColors[p]+'"',
-        '-opaque black',
-        '-resize '+squareSize,
-        outputName(icon, p)
-      );
-      // convert('-size 680x680','xc:transparent','-fill none', '-stroke black', '-strokewidth 40', '-draw "circle 340,340 20,340"','"\(" '+inputPath+' -geometry +84+84 "\)" -composite','-resize '+squareSize,outputPath+icon+'-rdbl-'+finalSize+'.png');
-    }
-  }
-
 }
 
-var overviewColumns = 8;
-if (brandColor) {
-  overviewColumns = 11;
-}
-var overviewRows = 12;
+var overviewColumns = Object.keys(iconStyles).length;
+var overviewRows = Object.keys(iconsDef).length;
 
 // Review available icons
 montage(outputPath+'*.png -background transparent -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all.png');
 montage(outputPath+'*.png -background transparent -geometry 48x48+6+6 -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all-48.png');
 montage(outputPath+'*.png -background transparent -geometry 32x32+6+6 -tile '+overviewColumns+'x'+overviewRows,'./icons-overview/all-32.png');
+
+// Create style overview icons
+var opts;
+for (var style in iconStyles) if (iconStyles.hasOwnProperty(style)) {
+  opts = [];
+  for (var i = 0; i < iconsSelection.length; i++) opts.push(outputPath+iconsSelection[i]+'-'+style+'-96.png');
+  opts.push('-background transparent');
+  opts.push('-geometry +6+6');
+  opts.push('-tile '+iconsSelection.length+'x1');
+  opts.push('./edres/_social-select-'+style+'.png');
+  montage.apply(null, opts);
+}
 
 console.log("DONE!");
 
@@ -165,7 +149,8 @@ function convert() {
 
 function montage() {
   var args = [].slice.call(arguments);
-  return run('montage'+' '+args.join(' '));
+  var outputname = args.pop();
+  return run('montage'+' '+args.join(' ')+' '+outputname) && run(pngquant+' '+outputname+' --ext=.png --force');
 }
 
 function run(cmd) {
