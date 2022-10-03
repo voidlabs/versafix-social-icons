@@ -29,6 +29,7 @@ var iconsDef = {
   'you':  '#cd201f',
   'wa':   '#25d366',
   'tg':   '#2da5e1',
+  'tt':   '#000000',
 };
 
 var iconsSelection = ['fb', 'tw', 'in', 'inst', 'wa', 'tg'];
