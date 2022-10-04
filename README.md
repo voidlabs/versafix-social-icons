@@ -4,7 +4,7 @@ In order to improve maintainability icon styles are automatically generated from
 
 ## SRC
 - ```icons-def/``` folder contains a 512x512 B&W icon for each social we support
-- ```index.js``` contains the 8 transformations we want to apply. 11 when a brandcolor is passed as argument.
+- ```index.js``` contains the 15 transformations we want to apply. 20 when a brandcolor is passed as argument.
 ![Example source icon](https://github.com/voidlabs/versafix-social-icons/blob/master/icons-def/inst-black-512.png?raw=true)
 
 ## GENERATED
