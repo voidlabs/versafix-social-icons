@@ -4,16 +4,26 @@ import cp from 'child_process';
 import pngquant from 'pngquant-bin';
 
 var iconStyles = {
-  white: { color: 'white' },
+  white: { color: 'white', sampleBg: 'gray' },
   coloured: { },
   black: { color: 'black' },
 
+  sqcolors: { transform: 'negativeSquares' },
+  sqbw: { transform: 'negativeSquares', color: 'gray' },
+  sqbwb: { transform: 'negativeSquares', color: 'black' },
+
   colors: { transform: 'negativeCircles' },
   bw: { transform: 'negativeCircles', color: 'gray' },
+  bwb: { transform: 'negativeCircles', color: 'black' },
 
   rdcol: { transform: 'roundedColors' },
   rdbl: { transform: 'roundedColors', color: 'black' },
-  rdw: { transform: 'roundedColors', color: 'white' },
+  rdw: { transform: 'roundedColors', color: 'white', sampleBg: 'gray' },
+
+  sqrdcol: { transform: 'squaredColors' },
+  sqrdbl: { transform: 'squaredColors', color: 'black' },
+  sqrdw: { transform: 'squaredColors', color: 'white', sampleBg: 'gray' },
+
 };
 
 var iconsDef = {
@@ -53,7 +63,9 @@ var DEBUG = false;
 if (typeof brandColor !== 'undefined') {
   iconStyles.colouredbrand = { color: brandColor };
   iconStyles.colorsBrand = { transform: 'negativeCircles', color: brandColor };
+  iconStyles.sqcolorsBrand = { transform: 'negativeSquares', color: brandColor };
   iconStyles.rdbrandcol = { transform: 'roundedColors', color: brandColor };
+  iconStyles.sqrdbrandcol = { transform: 'squaredColors', color: brandColor };
 }
 
 var color, inputPath;
@@ -97,6 +109,17 @@ for(var icon in iconsDef) if (iconsDef.hasOwnProperty(icon)) {
         );
         break;
 
+      case 'negativeSquares':
+        convert('-size 600x600',
+          'xc:transparent',
+          '-fill "'+iconColor+'"',
+          '-draw "roundRectangle 0,0,600,600 100,100"',
+          '"\(" '+inputName+' -fuzz 90% -fill white -opaque black -geometry +44+44 "\)" -composite',
+          '-resize '+squareSize,
+          outputName
+        );
+        break;
+
       case 'roundedColors':
         convert('-size 680x680',
           'xc:transparent',
@@ -104,6 +127,22 @@ for(var icon in iconsDef) if (iconsDef.hasOwnProperty(icon)) {
           '-stroke black',
           '-strokewidth 40',
           '-draw "circle 340,340 20,340"',
+          '"\(" '+inputName+' -geometry +84+84 "\)" -composite',
+          '-fuzz 90%',
+          '-fill "'+iconColor+'"',
+          '-opaque black',
+          '-resize '+squareSize,
+          outputName
+        );
+        break;
+
+      case 'squaredColors':
+        convert('-size 680x680',
+          'xc:transparent',
+          '-fill none',
+          '-stroke black',
+          '-strokewidth 40',
+          '-draw "roundRectangle 20,20,660,660 100,100"',
           '"\(" '+inputName+' -geometry +84+84 "\)" -composite',
           '-fuzz 90%',
           '-fill "'+iconColor+'"',
@@ -132,7 +171,11 @@ var opts;
 for (var style in iconStyles) if (iconStyles.hasOwnProperty(style)) {
   opts = [];
   for (var i = 0; i < iconsSelection.length; i++) opts.push(outputPath+iconsSelection[i]+'-'+style+'-96.png');
-  opts.push('-background transparent');
+  if (iconStyles[style].hasOwnProperty('sampleBg')) {
+    opts.push('-background ' + iconStyles[style].sampleBg);
+  } else {
+    opts.push('-background transparent');
+  }
   opts.push('-geometry +6+6');
   opts.push('-tile '+iconsSelection.length+'x1');
   opts.push('./edres/_social-select-'+style+'.png');
