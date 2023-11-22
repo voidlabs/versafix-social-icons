@@ -28,7 +28,8 @@ var iconStyles = {
 
 var iconsDef = {
   'fb':   '#3b5998',
-  'tw':   '#4099FF',
+  'tr':   '#4099FF',
+  'tw':   '#000000',
   'gg':   '#d34836',
   'web':  '#606060',
   'in':   '#007bb6',
