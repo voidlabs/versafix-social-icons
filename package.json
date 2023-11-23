@@ -10,13 +10,13 @@
   },
   "scripts": {
     "build": "node index.js",
-    "clean": "node ./node_modules/rimraf/bin.js -- icons-overview/*.png icons/*.png edres/*.png"
+    "clean": "del-cli icons-overview/*.png icons/*.png edres/*.png"
   },
   "author": "Stefano Bagnara",
   "license": "MIT",
   "devDependencies": {
     "pngquant-bin": "^8.0.1",
-    "rimraf": "^3.0.2",
+    "del-cli": "^5.1.0",
     "semver-regex": ">=4.0.5"
   },
   "engines": {
