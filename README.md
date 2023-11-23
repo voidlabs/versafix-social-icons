@@ -24,3 +24,9 @@ You need NodeJS v6.0 or higher + ImageMagick
   npm run build
   npm run build -- "#900000"
 ```
+
+### Dev Notes
+
+Released through "release-it".
+
+Updating rimraf to 5+ doesn't work as it changed the binary path and the wildcard syntax, so we simply stick to the older one.

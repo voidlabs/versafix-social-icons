@@ -22,5 +22,21 @@
   "engines": {
     "node": ">= 13.2.0",
     "npm": ">= 8.0.0"
+  },
+  "release-it": {
+    "git": {
+      "addUntrackedFiles": true
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}"
+    },
+    "hooks": {
+      "after:bump": [
+        "npm run clean",
+        "npm run build"
+      ],
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+    }
   }
 }
