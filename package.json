@@ -1,6 +1,6 @@
 {
   "name": "versafix-social-icons",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "Social icon pack for Mosaico's versafix-1 master template",
   "main": "index.js",
   "type": "module",
