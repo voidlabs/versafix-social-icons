@@ -42,9 +42,11 @@ var iconsDef = {
   'tg':   '#2da5e1',
   'tt':   '#000000',
   'tc':   '#9146ff',
+  'mn':   '#6364FF',
+  'by':   '#1185fe',
 };
 
-var iconsSelection = ['fb', 'tw', 'in', 'inst', 'wa', 'tg'];
+var iconsSelection = ['fb', 'tw', 'in', 'inst', 'wa', 'tg', 'mn', 'by'];
 
 var iconsSourceOverride = {
   negativeCircles: {
@@ -52,6 +54,7 @@ var iconsSourceOverride = {
   },
   roundedColors: {
     'wa': 'wa-rd',
+    'mn': 'mn-rd',
   }
 }
 
